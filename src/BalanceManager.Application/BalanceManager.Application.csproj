@@ -25,4 +25,10 @@
     <ProjectReference Include="..\BalanceManager.Domain\BalanceManager.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="BalanceManager">
+      <HintPath>bin\Debug\netcoreapp3.1\BalanceManager.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>

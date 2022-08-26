@@ -4,7 +4,7 @@ using System.Linq;
 using System;
 using Balances;
 using System.Threading.Tasks;
-using BalanceManager.Persistence.Abstractions;
+using BalanceManager.Application.Abstractions;
 using BalanceManager.Domain.Enums;
 
 namespace BalanceManager.API.Controllers

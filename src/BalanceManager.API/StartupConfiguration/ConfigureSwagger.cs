@@ -2,7 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 
-namespace BalanceManager.API
+namespace BalanceManager.API.StartupConfiguration
 {
     public static class ConfigureSwagger
     {

@@ -1,4 +1,4 @@
-﻿using BalanceManager.Persistence.Abstractions;
+﻿using BalanceManager.Application.Abstractions;
 using Balances;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;

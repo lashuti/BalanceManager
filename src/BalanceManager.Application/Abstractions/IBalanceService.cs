@@ -7,11 +7,12 @@ using System.Threading.Tasks;
 using Balances;
 using BalanceManager.Domain.Enums;
 
-namespace BalanceManager.Persistence.Abstractions
+namespace BalanceManager.Application.Abstractions
 {
     public interface IBalanceService
     {
         ActionResult<decimal> GetBalance();
         ActionResult<ErrorCode> TransferBalance(decimal amount, string transactionId, OperationType operationType);
+        ActionResult<ErrorCode> TransferBalanceV2(decimal amount, string transactionId, OperationType operationType);
     }
 }

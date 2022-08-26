@@ -1,7 +1,6 @@
-using BalanceManager.API;
 using BalanceManager.Domain.Enums;
-using BalanceManager.Persistence.Abstractions;
-using BalanceManager.Persistence.Implementations;
+using BalanceManager.Application.Abstractions;
+using BalanceManager.Application.Implementations;
 using Balances;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -23,6 +22,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BalanceManager.API.StartupConfiguration;
 
 namespace BalanceManager
 {
@@ -53,6 +53,8 @@ namespace BalanceManager
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.ConfigureExceptionHandler(); //Won't get displayed in Swagger but in real project it's details would be logged
 
             app.UseSwagger();
 

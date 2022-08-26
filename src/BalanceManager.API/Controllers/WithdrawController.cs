@@ -1,5 +1,5 @@
 ﻿using BalanceManager.Domain.Enums;
-using BalanceManager.Persistence.Abstractions;
+using BalanceManager.Application.Abstractions;
 using Balances;
 using Microsoft.AspNetCore.Mvc;
 
