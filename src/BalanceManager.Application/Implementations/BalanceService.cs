@@ -3,9 +3,6 @@ using BalanceManager.Application.Exceptions;
 using BalanceManager.Domain.Enums;
 using Balances;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace BalanceManager.Application.Implementations
 {
@@ -13,9 +10,6 @@ namespace BalanceManager.Application.Implementations
     {
         private readonly CasinoBalanceManager _casinoBalanceManager;
         private readonly GameBalanceManager _gameBalanceManager;
-        //Add XML Comments in Swagger
-        //Add Unit Tests
-        //Authorization
         public BalanceService()
         {
             _casinoBalanceManager = new CasinoBalanceManager();

@@ -1,8 +1,6 @@
 ﻿using BalanceManager.Application.Abstractions;
-using Balances;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
 
 namespace BalanceManager.API.Controllers
 {

@@ -1,14 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Moq;
 using FluentAssertions;
-using FluentAssertions.Execution;
 using BalanceManager.Application.Implementations;
 using Balances;
 using Xunit;
 using BalanceManager.Domain.Enums;
-using System.Threading.Tasks;
 using BalanceManager.Application.Exceptions;
 
 namespace BalanceManager.Application.Tests.Implementations
