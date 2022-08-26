@@ -2,6 +2,7 @@
 using BalanceManager.Application.Abstractions;
 using Balances;
 using Microsoft.AspNetCore.Mvc;
+using System;
 
 namespace BalanceManager.API.Controllers
 {
@@ -15,7 +16,7 @@ namespace BalanceManager.API.Controllers
 
         public WithdrawController(IBalanceService balanceService)
         {
-            _balanceService = balanceService;
+            _balanceService = balanceService ?? throw new ArgumentNullException(nameof(balanceService));
         }
 
         [HttpGet("{transactionId}/{amount}")]

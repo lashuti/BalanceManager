@@ -19,7 +19,7 @@ namespace BalanceManager.API.Controllers
 
         public DepositController(IBalanceService balanceService)
         {
-            _balanceService = balanceService;
+            _balanceService = balanceService ?? throw new ArgumentNullException(nameof(balanceService));
         }
 
         [HttpGet("{transactionId}/{amount}")]

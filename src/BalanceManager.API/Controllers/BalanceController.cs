@@ -1,6 +1,7 @@
 ﻿using BalanceManager.Application.Abstractions;
 using Balances;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 
 namespace BalanceManager.API.Controllers
@@ -14,7 +15,7 @@ namespace BalanceManager.API.Controllers
 
         public BalanceController(IBalanceService balanceService)
         {
-            _balanceService = balanceService;
+            _balanceService = balanceService ?? throw new ArgumentNullException(nameof(balanceService));
         }
 
         [HttpGet]
