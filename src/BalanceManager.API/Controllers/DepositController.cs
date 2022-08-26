@@ -10,7 +10,9 @@ using BalanceManager.Domain.Enums;
 namespace BalanceManager.API.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [ApiVersion("1.0")]
+    [ApiVersion("2.0")]
+    [Route("v/{version:apiVersion}/[controller]")]
     public class DepositController : ControllerBase
     {
         private readonly IBalanceService _balanceService;
