@@ -10,6 +10,8 @@ namespace BalanceManager.Persistence.Implementations
 {
     public class BalanceService : IBalanceService
     {
+        private IBalanceManagerRepository _balanceManager;
+
         private readonly CasinoBalanceManager _casinoBalanceManager;
         private readonly GameBalanceManager _gameBalanceManager;
         //TODO Change to Dependecy Injection mayb
@@ -18,14 +20,24 @@ namespace BalanceManager.Persistence.Implementations
         //Add Unit Tests
         //Change into custom exception throw // V1 THIS //V2 Exception Throw
         //Display Enum as String
-        public BalanceService()
+        //Authorization
+        public BalanceService(IBalanceManagerRepository balanceManager)
         {
+            _balanceManager = balanceManager;
+
             _casinoBalanceManager = new CasinoBalanceManager();
             _gameBalanceManager = new GameBalanceManager();
         }
 
+        public ActionResult<decimal> GetBalance()
+        {
+            return _casinoBalanceManager.GetBalance();
+        }
+
         public ActionResult<ErrorCode> TransferBalance(decimal amount, string transactionId, OperationType operationType)
         {
+            //_balanceManager.
+
             IBalanceManager _balanceToDecrease;
             IBalanceManager _balanceToIncrease;
 
@@ -39,24 +51,23 @@ namespace BalanceManager.Persistence.Implementations
                 _balanceToDecrease = _casinoBalanceManager;
                 _balanceToIncrease = _gameBalanceManager;
             }
-            //deposit = game -    casino +
 
 
-            var startingGameBalance = _balanceToDecrease.GetBalance();
+            var startingBalanceBeforeDecrease = _balanceToDecrease.GetBalance();
 
-            var decreaseGameBalanceStatus = _balanceToDecrease.DecreaseBalance(amount, transactionId);
+            var decreaseBalance = _balanceToDecrease.DecreaseBalance(amount, transactionId);
 
-            if (decreaseGameBalanceStatus != ErrorCode.Success && decreaseGameBalanceStatus != ErrorCode.UnknownError)
-                return decreaseGameBalanceStatus;
+            if (decreaseBalance != ErrorCode.Success && decreaseBalance != ErrorCode.UnknownError)
+                return decreaseBalance;
 
-            if (decreaseGameBalanceStatus is ErrorCode.UnknownError)
+            if (decreaseBalance is ErrorCode.UnknownError)
             {
-                if (startingGameBalance != _balanceToDecrease.GetBalance())
+                if (startingBalanceBeforeDecrease != _balanceToDecrease.GetBalance())
                 {
                     var rollback = _balanceToDecrease.Rollback(transactionId);
 
                     if (rollback == ErrorCode.UnknownError)
-                        while (startingGameBalance != _balanceToDecrease.GetBalance())
+                        while (startingBalanceBeforeDecrease != _balanceToDecrease.GetBalance())
                             _balanceToDecrease.Rollback(transactionId);
 
                     return ErrorCode.TransactionRollbacked;
@@ -65,38 +76,38 @@ namespace BalanceManager.Persistence.Implementations
             //////////////////////////////////////////////////////
             //exception handling THROW Exceptions and then Handle them globally from that STATIA
 
-            var startingCasinoBalance = _balanceToIncrease.GetBalance();
+            var startingBalanceBeforeIncrease = _balanceToIncrease.GetBalance();
 
-            var increaseCasinoBalanceStatus = _balanceToIncrease.IncreaseBalance(amount, transactionId);
+            var increaseBalance = _balanceToIncrease.IncreaseBalance(amount, transactionId);
 
-            var casinoStatus = ErrorCode.Success;
+            var statusForIncreaseBalance = ErrorCode.Success;
 
-            if (increaseCasinoBalanceStatus != ErrorCode.Success && increaseCasinoBalanceStatus != ErrorCode.UnknownError) //RollBack Decrease of GameBal
-                casinoStatus = increaseCasinoBalanceStatus;
+            if (increaseBalance != ErrorCode.Success && increaseBalance != ErrorCode.UnknownError)
+                statusForIncreaseBalance = increaseBalance;
 
-            if (increaseCasinoBalanceStatus is ErrorCode.UnknownError)
+            if (increaseBalance is ErrorCode.UnknownError)
             {
-                if (startingCasinoBalance != _balanceToIncrease.GetBalance())
+                if (startingBalanceBeforeIncrease != _balanceToIncrease.GetBalance())
                 {
                     var rollback = _balanceToIncrease.Rollback(transactionId);
 
                     if (rollback == ErrorCode.UnknownError)
-                        while (startingCasinoBalance != _balanceToIncrease.GetBalance())
+                        while (startingBalanceBeforeIncrease != _balanceToIncrease.GetBalance())
                             _balanceToIncrease.Rollback(transactionId);
 
-                    casinoStatus = ErrorCode.TransactionRollbacked;
+                    statusForIncreaseBalance = ErrorCode.TransactionRollbacked;
                 }
             }
 
-            if (casinoStatus != ErrorCode.Success)
+            if (statusForIncreaseBalance != ErrorCode.Success)
             {
                 var rollback = _balanceToDecrease.Rollback(transactionId);
 
                 if (rollback == ErrorCode.UnknownError)
                 {
-                    while (startingGameBalance != _balanceToDecrease.GetBalance())
+                    while (startingBalanceBeforeDecrease != _balanceToDecrease.GetBalance())
                         _balanceToDecrease.Rollback(transactionId);
-                    while (startingCasinoBalance != _balanceToIncrease.GetBalance())
+                    while (startingBalanceBeforeIncrease != _balanceToIncrease.GetBalance())
                         _balanceToIncrease.Rollback(transactionId);
                 }
                 return ErrorCode.TransactionRollbacked;

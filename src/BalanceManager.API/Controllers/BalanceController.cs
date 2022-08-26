@@ -1,4 +1,5 @@
-﻿using Balances;
+﻿using BalanceManager.Persistence.Abstractions;
+using Balances;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 
@@ -8,18 +9,17 @@ namespace BalanceManager.API.Controllers
     [Route("[controller]")]
     public class BalanceController : ControllerBase
     {
-        //TODO
-        private readonly CasinoBalanceManager _casinoBalanceManager;
+        private readonly IBalanceService _balanceService;
 
-        public BalanceController()
+        public BalanceController(IBalanceService balanceService)
         {
-            _casinoBalanceManager = new CasinoBalanceManager();
+            _balanceService = balanceService;
         }
 
         [HttpGet]
         public ActionResult<decimal> Get()
         {
-            return _casinoBalanceManager.GetBalance();
+            return _balanceService.GetBalance();
         }
     }
 }

@@ -11,7 +11,7 @@ namespace BalanceManager.Persistence.Abstractions
 {
     public interface IBalanceService
     {
+        ActionResult<decimal> GetBalance();
         ActionResult<ErrorCode> TransferBalance(decimal amount, string transactionId, OperationType operationType);
-
     }
 }

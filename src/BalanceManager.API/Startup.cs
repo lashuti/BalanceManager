@@ -1,3 +1,4 @@
+using BalanceManager.Domain.Enums;
 using BalanceManager.Domain.Models;
 using BalanceManager.Persistence.Abstractions;
 using BalanceManager.Persistence.Database;
@@ -13,6 +14,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,7 +34,12 @@ namespace BalanceManager
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services
+                .AddControllers()
+                .AddNewtonsoftJson(options =>
+                    options.SerializerSettings.Converters.Add(new StringEnumConverter()));
+
+            services.AddSwaggerGenNewtonsoftSupport();
 
             services.AddSwaggerGen(c =>
             {
@@ -42,17 +49,31 @@ namespace BalanceManager
                     Version = "v1",
                     Description = "API For Managing Casino Balance",
                 });
-
             });
 
             services.AddRouting(options => options.LowercaseUrls = true);
 
-            services.AddDbContext<SingularContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            //services.AddDbContext<SingularContext>(options =>
+            //    options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddTransient<IBalanceService, BalanceService>();
+            //TODO AddServices
+            //services.AddScoped<IBalanceManagerRepository, BalanceManagerRepository>();
+            //services.AddTransient<CasinoBalanceManager>();
+            //services.AddTransient<GameBalanceManager>();
+            //services.AddTransient<Func<InstanceEnum, IBalanceManager>>(serviceProvider => key => {
+            //    switch (key)
+            //    {
+            //        case InstanceEnum.GameInstance:
+            //            return serviceProvider.GetService<GameBalanceManager>();
+            //        case InstanceEnum.CasinoInstance:
+            //            return serviceProvider.GetService<CasinoBalanceManager>();
+            //        default:
+            //            throw new NotImplementedException();
+            //    }
+            //});
         }
-
+        
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
