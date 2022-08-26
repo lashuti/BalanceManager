@@ -1,7 +1,13 @@
+using BalanceManager.Domain.Models;
+using BalanceManager.Persistence.Abstractions;
+using BalanceManager.Persistence.Database;
+using BalanceManager.Persistence.Implementations;
+using Balances;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -40,6 +46,11 @@ namespace BalanceManager
             });
 
             services.AddRouting(options => options.LowercaseUrls = true);
+
+            services.AddDbContext<SingularContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddTransient<IBalanceService, BalanceService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

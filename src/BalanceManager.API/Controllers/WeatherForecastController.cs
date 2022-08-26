@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace BalanceManager.Controllers
+namespace BalanceManager.API.Controllers
 {
     [ApiController]
     [Route("[controller]")]
