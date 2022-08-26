@@ -28,6 +28,8 @@ namespace BalanceManager
 
             ConfigureSwagger.ConfigureSwaggerOptions(services);
 
+            services.AddRouting(options => options.LowercaseUrls = true);
+            
             services.AddTransient<IBalanceService, BalanceService>();
         }
 
@@ -38,7 +40,8 @@ namespace BalanceManager
                 app.UseDeveloperExceptionPage();
             }
 
-            app.ConfigureExceptionHandler(); //Won't get displayed in Swagger but in real project it's details would be logged
+            //Exception description and stack trace won't get displayed in Swagger but in real project it's details would be logged
+            app.ConfigureExceptionHandler(); 
 
             app.UseSwagger();
 

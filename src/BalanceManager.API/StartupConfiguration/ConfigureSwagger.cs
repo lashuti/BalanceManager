@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
+using System.Linq;
 
 namespace BalanceManager.API.StartupConfiguration
 {
@@ -29,6 +30,7 @@ namespace BalanceManager.API.StartupConfiguration
                     Description = _description,
                 });
 
+                c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
             });
 
             services.AddApiVersioning(cfg =>
@@ -43,8 +45,6 @@ namespace BalanceManager.API.StartupConfiguration
                 options.GroupNameFormat = "'v'VVV";
                 options.SubstituteApiVersionInUrl = true;
             });
-
-            services.AddRouting(options => options.LowercaseUrls = true);
         }
     }
 }
