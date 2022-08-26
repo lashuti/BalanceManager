@@ -10,21 +10,16 @@ namespace BalanceManager.Persistence.Implementations
 {
     public class BalanceService : IBalanceService
     {
-        private IBalanceManagerRepository _balanceManager;
-
         private readonly CasinoBalanceManager _casinoBalanceManager;
         private readonly GameBalanceManager _gameBalanceManager;
-        //TODO Change to Dependecy Injection mayb
-        //Add Controoler calls
         //Add XML Comments in Swagger
         //Add Unit Tests
         //Change into custom exception throw // V1 THIS //V2 Exception Throw
+        //exception handling THROW Exceptions and then Handle them globally from that STATIA
         //Display Enum as String
         //Authorization
-        public BalanceService(IBalanceManagerRepository balanceManager)
+        public BalanceService()
         {
-            _balanceManager = balanceManager;
-
             _casinoBalanceManager = new CasinoBalanceManager();
             _gameBalanceManager = new GameBalanceManager();
         }
@@ -36,8 +31,6 @@ namespace BalanceManager.Persistence.Implementations
 
         public ActionResult<ErrorCode> TransferBalance(decimal amount, string transactionId, OperationType operationType)
         {
-            //_balanceManager.
-
             IBalanceManager _balanceToDecrease;
             IBalanceManager _balanceToIncrease;
 
@@ -52,7 +45,7 @@ namespace BalanceManager.Persistence.Implementations
                 _balanceToIncrease = _gameBalanceManager;
             }
 
-
+            #region DecreaseBalance
             var startingBalanceBeforeDecrease = _balanceToDecrease.GetBalance();
 
             var decreaseBalance = _balanceToDecrease.DecreaseBalance(amount, transactionId);
@@ -73,9 +66,9 @@ namespace BalanceManager.Persistence.Implementations
                     return ErrorCode.TransactionRollbacked;
                 }
             }
-            //////////////////////////////////////////////////////
-            //exception handling THROW Exceptions and then Handle them globally from that STATIA
-
+            #endregion
+            
+            #region IncreaseBalance
             var startingBalanceBeforeIncrease = _balanceToIncrease.GetBalance();
 
             var increaseBalance = _balanceToIncrease.IncreaseBalance(amount, transactionId);
@@ -113,6 +106,7 @@ namespace BalanceManager.Persistence.Implementations
                 return ErrorCode.TransactionRollbacked;
             }
             return ErrorCode.Success;
+            #endregion
         }
     }
 }

@@ -7,7 +7,7 @@ namespace BalanceManager.API.Controllers
 {
     [ApiController]
     [ApiVersion("1.0")]
-    [Route("v/{version:apiVersion}/[controller]")]
+    [Route("v{version:apiVersion}/[controller]")]
     public class BalanceController : ControllerBase
     {
         private readonly IBalanceService _balanceService;
