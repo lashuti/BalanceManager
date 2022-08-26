@@ -17,6 +17,7 @@ namespace BalanceManager.Persistence.Implementations
         //Add XML Comments in Swagger
         //Add Unit Tests
         //Change into custom exception throw // V1 THIS //V2 Exception Throw
+        //Display Enum as String
         public BalanceService()
         {
             _casinoBalanceManager = new CasinoBalanceManager();
@@ -41,22 +42,22 @@ namespace BalanceManager.Persistence.Implementations
             //deposit = game -    casino +
 
 
-            var startingGameBalance = _gameBalanceManager.GetBalance();
+            var startingGameBalance = _balanceToDecrease.GetBalance();
 
-            var decreaseGameBalanceStatus = _gameBalanceManager.DecreaseBalance(amount, transactionId);
+            var decreaseGameBalanceStatus = _balanceToDecrease.DecreaseBalance(amount, transactionId);
 
             if (decreaseGameBalanceStatus != ErrorCode.Success && decreaseGameBalanceStatus != ErrorCode.UnknownError)
                 return decreaseGameBalanceStatus;
 
             if (decreaseGameBalanceStatus is ErrorCode.UnknownError)
             {
-                if (startingGameBalance != _gameBalanceManager.GetBalance())
+                if (startingGameBalance != _balanceToDecrease.GetBalance())
                 {
-                    var rollback = _gameBalanceManager.Rollback(transactionId);
+                    var rollback = _balanceToDecrease.Rollback(transactionId);
 
                     if (rollback == ErrorCode.UnknownError)
-                        while (startingGameBalance != _gameBalanceManager.GetBalance())
-                            _gameBalanceManager.Rollback(transactionId);
+                        while (startingGameBalance != _balanceToDecrease.GetBalance())
+                            _balanceToDecrease.Rollback(transactionId);
 
                     return ErrorCode.TransactionRollbacked;
                 }
@@ -64,9 +65,9 @@ namespace BalanceManager.Persistence.Implementations
             //////////////////////////////////////////////////////
             //exception handling THROW Exceptions and then Handle them globally from that STATIA
 
-            var startingCasinoBalance = _casinoBalanceManager.GetBalance();
+            var startingCasinoBalance = _balanceToIncrease.GetBalance();
 
-            var increaseCasinoBalanceStatus = _casinoBalanceManager.IncreaseBalance(amount, transactionId);
+            var increaseCasinoBalanceStatus = _balanceToIncrease.IncreaseBalance(amount, transactionId);
 
             var casinoStatus = ErrorCode.Success;
 
@@ -75,13 +76,13 @@ namespace BalanceManager.Persistence.Implementations
 
             if (increaseCasinoBalanceStatus is ErrorCode.UnknownError)
             {
-                if (startingCasinoBalance != _casinoBalanceManager.GetBalance())
+                if (startingCasinoBalance != _balanceToIncrease.GetBalance())
                 {
-                    var rollback = _casinoBalanceManager.Rollback(transactionId);
+                    var rollback = _balanceToIncrease.Rollback(transactionId);
 
                     if (rollback == ErrorCode.UnknownError)
-                        while (startingCasinoBalance != _casinoBalanceManager.GetBalance())
-                            _casinoBalanceManager.Rollback(transactionId);
+                        while (startingCasinoBalance != _balanceToIncrease.GetBalance())
+                            _balanceToIncrease.Rollback(transactionId);
 
                     casinoStatus = ErrorCode.TransactionRollbacked;
                 }
@@ -89,14 +90,14 @@ namespace BalanceManager.Persistence.Implementations
 
             if (casinoStatus != ErrorCode.Success)
             {
-                var rollback = _gameBalanceManager.Rollback(transactionId);
+                var rollback = _balanceToDecrease.Rollback(transactionId);
 
                 if (rollback == ErrorCode.UnknownError)
                 {
-                    while (startingGameBalance != _gameBalanceManager.GetBalance())
-                        _gameBalanceManager.Rollback(transactionId);
-                    while (startingCasinoBalance != _casinoBalanceManager.GetBalance())
-                        _casinoBalanceManager.Rollback(transactionId);
+                    while (startingGameBalance != _balanceToDecrease.GetBalance())
+                        _balanceToDecrease.Rollback(transactionId);
+                    while (startingCasinoBalance != _balanceToIncrease.GetBalance())
+                        _balanceToIncrease.Rollback(transactionId);
                 }
                 return ErrorCode.TransactionRollbacked;
             }

@@ -5,6 +5,7 @@ using System;
 using Balances;
 using System.Threading.Tasks;
 using BalanceManager.Persistence.Abstractions;
+using BalanceManager.Domain.Enums;
 
 namespace BalanceManager.API.Controllers
 {
@@ -22,7 +23,7 @@ namespace BalanceManager.API.Controllers
         [HttpGet("{transactionId}/{amount}")]
         public ActionResult<ErrorCode> Deposit(decimal amount, string transactionId)
         {
-            return _balanceService.TransferBalance(amount, transactionId);
+            return _balanceService.TransferBalance(amount, transactionId, OperationType.Deposit);
         }
     }
 }
