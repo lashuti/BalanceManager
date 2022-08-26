@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -21,16 +21,5 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
     <PackageReference Include="Swashbuckle.AspNetCore.Newtonsoft" Version="6.4.0" />
   </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\BalanceManager.Persistence\BalanceManager.Persistence.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="BalanceManager">
-      <HintPath>..\BalanceManager.Application\bin\Debug\netcoreapp3.1\BalanceManager.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
 
 </Project>
